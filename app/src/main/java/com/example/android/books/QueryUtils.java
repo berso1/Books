@@ -42,14 +42,9 @@ public final class QueryUtils {
     /**
      * Query the Google books dataset and return an {@link Book} object to represent a single earthquake.
      */
+
+
     public static List<Book> fetchEarthquakeData(String requestUrl) {
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
 
 
         // Create URL object
@@ -143,30 +138,43 @@ public final class QueryUtils {
      * Return an {book} object by parsing out information
      * about the first earthquake from the input earthquakeJSON string.
      */
-    private static List<Book> extractFeatureFromJson(String earthquakeJSON) {
+    private static List<Book> extractFeatureFromJson(String bookJSON) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(earthquakeJSON)) {
+        if (TextUtils.isEmpty(bookJSON)) {
             return null;
         }
         List<Book> books = new ArrayList<>();
         try {
-            JSONObject baseJsonResponse = new JSONObject(earthquakeJSON);
-            JSONArray featureArray = baseJsonResponse.getJSONArray("features");
+            JSONObject baseJsonResponse = new JSONObject(bookJSON);
+            JSONArray featureArray = baseJsonResponse.getJSONArray("items");
 
             for( int i = 0; i < featureArray.length(); i++){
                 JSONObject book = featureArray.getJSONObject(i);
-                JSONArray autors  = book.getJSONObject("volumeInfo").getJSONArray("authors");
-                String autor = autors.getString(0);
-                String name = book.getJSONObject("volumeInfo").getString("title");
-                Double cost  = book.getJSONObject("volumeInfo").getDouble("time");
-                String currency = book.getJSONObject("volumeInfo").getString("url");
+                JSONObject volumeInfo = book.getJSONObject("volumeInfo");
+                String title = "";
+                String subtitle = "";
+                String authors = " Unknow";
+                String description = "";
 
-                // Log.v(LOG_TAG + "mag,place,time,url",mag+","+place+","+time+","+url);
+                if(volumeInfo.has("title")){
+                    title = book.getJSONObject("volumeInfo").getString("title");
+                }
+                if(volumeInfo.has("subtitle")) {
+                    subtitle = volumeInfo.getString("subtitle");
+                }
+                if(volumeInfo.has("authors")) {
+                    JSONArray jSauthors = book.getJSONObject("volumeInfo").getJSONArray("authors");
+                    authors = getAutors(jSauthors);
+                }    
+                if(volumeInfo.has("description")){
+                    description = book.getJSONObject("volumeInfo").getString("description");
+                }
 
-                books.add(new Book(autor,name,cost,currency));
+               // Log.v(LOG_TAG + "title,subt,authors,des",title+","+subtitle+","+authors+","+description);
+
+                books.add(new Book(title,subtitle,authors,description));
             }
             return books;
-
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
@@ -174,6 +182,30 @@ public final class QueryUtils {
             Log.e("QueryUtils....", "Problem parsing the earthquake JSON results", e);
         }
         return null;
+    }
+
+
+    private static String getAutors(JSONArray jSauthors) {
+
+        String[] authors = null;
+        if (jSauthors != null) {
+            int length = jSauthors.length();
+            authors = new String[length];
+            for (int i = 0; i < length; i++) {
+                authors[i] = jSauthors.optString(i);
+            }
+        }
+
+        String result = "";
+        if (authors.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (String s : authors) {
+                sb.append(s).append(",");
+            }
+            int i = sb.length();
+            result = sb.deleteCharAt(sb.length() - 1).toString();
+        }
+        return result;
     }
 
 }

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Create a new intent to open the BooksActivity
                 Intent myBookIntent = new Intent(MainActivity.this, BooksActivity.class);
-                myBookIntent.putExtra ( "TextBox", editText.getText().toString() );
+                myBookIntent.putExtra ( "SearchString", editText.getText().toString() );
                 startActivity(myBookIntent);
             }
         });
