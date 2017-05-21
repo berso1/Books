@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Books</string>
     <string name="book_list">Books Find</string>
+    <string name="search_title">Book Search Fom Google</string>
+    <string name="search_instrution">Type your search criteria</string>
+    <string name="no_books">No books found</string>
+    <string name="no_connection">No internet connection</string>
+    <string name="search_buton">Search</string>
+    <string name="title_tag">Title: </string>
+    <string name="autor_tag">Author(s): </string>
 </resources>

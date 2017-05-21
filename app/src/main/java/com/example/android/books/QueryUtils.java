@@ -44,9 +44,15 @@ public final class QueryUtils {
      */
 
 
-    public static List<Book> fetchEarthquakeData(String requestUrl) {
+    public static List<Book> fetchBookData(String requestUrl) {
 
-
+        /**Sleep the thread for 2 seconds so the loader indicator can be seen
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+*/
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -59,7 +65,7 @@ public final class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create an {@link Event} object
-        List<Book> books = extractFeatureFromJson(jsonResponse);
+        List<Book> books = extractItemFromJson(jsonResponse);
 
         // Return the {@link Event}
         return books;
@@ -138,7 +144,7 @@ public final class QueryUtils {
      * Return an {book} object by parsing out information
      * about the first earthquake from the input earthquakeJSON string.
      */
-    private static List<Book> extractFeatureFromJson(String bookJSON) {
+    private static List<Book> extractItemFromJson(String bookJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(bookJSON)) {
             return null;

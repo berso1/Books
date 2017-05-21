@@ -16,17 +16,15 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
-    List<Book> books;
-    Context context;
+    private List<Book> books;
+    private Context context;
+    TextView emptyView;
 
 
-    View bookView;
-    ViewHolder bookViewHolder;
-
-    public BookAdapter(Context context, List<Book> books){
-
+    public BookAdapter(Context context, List<Book> books,TextView emptyView){
         this.books = books;
         this.context = context;
+        this.emptyView = emptyView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -35,6 +33,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         private TextView subtitle;
         private TextView autors;
 
+
         public ViewHolder(View view){
 
             super(view);
@@ -42,19 +41,28 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
             title     = (TextView)view.findViewById(R.id.title_textview);
             subtitle  = (TextView)view.findViewById(R.id.subtitle_textview);
             autors    = (TextView)view.findViewById(R.id.autor_textview);
+
         }
     }
 
 
     @Override
     public BookAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+       // bookView = LayoutInflater.from(context).inflate(R.layout.recyclerview_items,parent,false);
+      //  bookViewHolder = new viewHolder(bookView);
+       // return bookViewHolder;
 
-        bookView = LayoutInflater.from(context).inflate(R.layout.recyclerview_items,parent,false);
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        bookViewHolder = new ViewHolder(bookView);
+        // Inflate the custom layout
+        View bookView = inflater.inflate(R.layout.recyclerview_items, parent, false);
 
-        return bookViewHolder;
+        // Return a new holder instance
+        ViewHolder viewHolder = new ViewHolder(bookView);
+        return viewHolder;
+
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
@@ -67,14 +75,22 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         TextView subtitle = holder.subtitle;
         TextView autors   = holder.autors;
 
+        autors.setText(book.getAutors());
         title.setText(book.getTitle());
         subtitle.setText(book.getSubtitle());
-        autors.setText("Author(s): "+book.getAutors());
+
 
     }
 
     @Override
     public int getItemCount(){
+        //Set the emptyView if no books
+        emptyView.setText(R.string.no_books);
+        if(books.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            emptyView.setVisibility(View.GONE);
+        }
         return books.size();
     }
 
@@ -82,5 +98,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         this.books = books;
         notifyDataSetChanged();
     }
+
+
 
 }
