@@ -18,7 +18,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
     private List<Book> books;
     private Context context;
-    TextView emptyView;
+    private TextView emptyView;
 
 
     public BookAdapter(Context context, List<Book> books,TextView emptyView){
@@ -48,9 +48,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
     @Override
     public BookAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-       // bookView = LayoutInflater.from(context).inflate(R.layout.recyclerview_items,parent,false);
-      //  bookViewHolder = new viewHolder(bookView);
-       // return bookViewHolder;
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -85,13 +82,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
     @Override
     public int getItemCount(){
-        //Set the emptyView if no books
-        emptyView.setText(R.string.no_books);
-        if(books.size() == 0) {
-            emptyView.setVisibility(View.VISIBLE);
-        }else{
-            emptyView.setVisibility(View.GONE);
-        }
         return books.size();
     }
 
@@ -99,7 +89,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         this.books = books;
         notifyDataSetChanged();
     }
-
 
 
 }

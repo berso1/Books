@@ -6,6 +6,5 @@
     <string name="no_books">No books found</string>
     <string name="no_connection">No internet connection</string>
     <string name="search_buton">Search</string>
-    <string name="title_tag">Title: </string>
-    <string name="autor_tag">Author(s): </string>
+
 </resources>

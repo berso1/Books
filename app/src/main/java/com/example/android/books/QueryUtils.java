@@ -36,6 +36,7 @@ public final class QueryUtils {
     public static final String LOG_TAG = BooksActivity.class.getName();
 
     private QueryUtils() {
+        //An empty private constructor makes sure that the class is not going to be initialised.
     }
 
 
@@ -46,13 +47,7 @@ public final class QueryUtils {
 
     public static List<Book> fetchBookData(String requestUrl) {
 
-        /**Sleep the thread for 2 seconds so the loader indicator can be seen
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-*/
+
         // Create URL object
         URL url = createUrl(requestUrl);
 

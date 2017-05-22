@@ -5,6 +5,7 @@
     android:background="@color/titleBGC"
     android:orientation="vertical">
 
+    <!-- This LinearLayout is used to paint allover the TextView, previews reviewer suget to remove it, but then i don't have the efect i whant -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

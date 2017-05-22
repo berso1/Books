@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
     private final int BOOK_LOADER_ID = 1;
     private RecyclerView recyclerView;
     private Context context;
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +53,13 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
         SeparatorDecoration decoration = new SeparatorDecoration(this, Color.GRAY, 3.5f);
         recyclerView.addItemDecoration(decoration);
 
-        TextView emptyView = (TextView) findViewById(R.id.empty_view);
-
+        //inicialize emptyView , pass it to the bookAdapter and set the adapter ro the recyclerView
+        emptyView = (TextView) findViewById(R.id.empty_view);
         bookAdapter = new BookAdapter(context, books, emptyView);
-
         recyclerView.setAdapter(bookAdapter);
 
 
-
+        //set the variables to test the connection
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -77,9 +78,10 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
             // Hide loading indicator because the data has been loaded
             View loadingIndicator = findViewById(R.id.loading_indicator);
             loadingIndicator.setVisibility(View.GONE);
-
             //set text for no connection
+            Log.v("network","no conexion");
             emptyView.setText(R.string.no_connection);
+            emptyView.setVisibility(View.VISIBLE);
         }
 
 
@@ -102,6 +104,11 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
         //Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
+        //set text for no books
+        if(books == null){
+            emptyView.setText(R.string.no_books);
+            emptyView.setVisibility(View.VISIBLE);
+        }
         final List<Book> book_list = books;
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the RecyclerView to update.
