@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,8 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
     private RecyclerView.LayoutManager recylerViewLayoutManager;
     private String googleBookRequestUrl="https://www.googleapis.com/books/v1/volumes?q=";
     private final int BOOK_LOADER_ID = 1;
-
+    private RecyclerView recyclerView;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +42,15 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
 
         setContentView(R.layout.books_activity);
         //prepare the RecyclerView
-        Context context = getApplicationContext();
+        context = getApplicationContext();
         RecyclerView.LayoutManager recylerViewLayoutManager = new LinearLayoutManager(context);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview1);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview1);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
+
+        // add the decoration to the recyclerView
+        SeparatorDecoration decoration = new SeparatorDecoration(this, Color.GRAY, 3.5f);
+        recyclerView.addItemDecoration(decoration);
+
         TextView emptyView = (TextView) findViewById(R.id.empty_view);
 
         bookAdapter = new BookAdapter(context, books, emptyView);
@@ -77,6 +85,8 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
 
 
 
+
+
     }
 
     @Override
@@ -92,21 +102,34 @@ public class BooksActivity extends AppCompatActivity implements LoaderManager.Lo
         //Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
-
-      //  TextView emptyView = (TextView) findViewById(R.id.empty_view);
-        // Set empty state text to display "No books found."
-       // emptyView.setText(R.string.no_books);
-
-
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
+        final List<Book> book_list = books;
+        // If there is a valid list of {@link Books}s, then add them to the adapter's
+        // data set. This will trigger the RecyclerView to update.
         if (books != null && !books.isEmpty()) {
             bookAdapter.updateItems(books);
+
+            recyclerView.addOnItemTouchListener(
+                    new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                        @Override public void onItemClick(View view, int position) {
+                            Book book = book_list.get(position);
+                            String descrition = book.getDescription();
+                            Toast.makeText(context,
+                                    descrition, Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override public void onLongItemClick(View view, int position) {
+                            // do whatever
+                        }
+                    })
+            );
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader) {
-        // Loader reset, so we can clear out our existing data.
+        // Nothing to do here for this app
     }
+
+
+
 }
